@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SGET.Data;
 using SGET.Models;
 using SGET.Models.Enum;
-using System.Threading.Tasks;
 
 namespace SGET.Controllers
 {

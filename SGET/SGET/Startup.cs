@@ -18,7 +18,7 @@ namespace SGET
 			var connectionString = Configuration.GetConnectionString("DefaultConnection");
 			if (string.IsNullOrEmpty(connectionString))
 			{
-				throw new InvalidOperationException("Connection string 'DefaultConnection' is null or empty.");
+				throw new InvalidOperationException("A cadeia de conexão 'DefaultConnection' é nula ou vazia.");
 			}
 
 			services.AddDbContext<AppDbContext>(options =>
