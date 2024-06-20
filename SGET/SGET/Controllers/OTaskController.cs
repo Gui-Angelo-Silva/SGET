@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SGET.Data;
 using SGET.Models;
 using SGET.Models.Enum;
+using System.Threading.Tasks;
 
 namespace SGET.Controllers
 {
@@ -27,46 +28,43 @@ namespace SGET.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<OTask>> GetTask(int id)
 		{
-			var tasks = await _context.OTasks.FindAsync(id);
-
-			if (tasks == null)
-			{
-				return NotFound();
-			}
-
-			return tasks;
+			var task = await _context.OTasks.FindAsync(id);
+			return task == null ? NotFound() : Ok(task);
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<OTask>> PostTask(OTask tasks)
+		public async Task<ActionResult<OTask>> PostTask(OTask task)
 		{
-			tasks.State = TaskState.Created;
-			_context.OTasks.Add(tasks);
+			if (task == null)
+			{
+				return BadRequest("Tarefa não pode ser nula!");
+			}
+
+			task.State = TaskState.Created;
+			_context.OTasks.Add(task);
 			await _context.SaveChangesAsync();
 
-			return CreatedAtAction("GetTask", new { id = tasks.Id }, tasks);
+			return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
 		}
 
 		[HttpPut("{id}/start")]
 		public async Task<IActionResult> StartTask(int id)
 		{
-			var tasks = await _context.OTasks.FindAsync(id);
+			var task = await _context.OTasks.FindAsync(id);
 
-			if (tasks == null)
+			if (task == null)
 			{
-				return NotFound();
+				return NotFound($"A Tarefa com o id: {id} não existe!");
 			}
 
-			if (tasks.State == TaskState.Created) 
+			if (task.State != TaskState.Created)
 			{
-				tasks.State = TaskState.InProgress;
-				_context.Entry(tasks).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
+				return BadRequest($"A tarefa não pode ser iniciada a partir do seu estado atual: {task.State}.");
 			}
-			else
-			{
-				return BadRequest("A tarefa não pode ser iniciada a partir do seu estado atual.");
-			}
+
+			task.State = TaskState.InProgress;
+			_context.Entry(task).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
 
 			return NoContent();
 		}
@@ -74,23 +72,21 @@ namespace SGET.Controllers
 		[HttpPut("{id}/complete")]
 		public async Task<IActionResult> CompleteTask(int id)
 		{
-			var tasks = await _context.OTasks.FindAsync(id);
+			var task = await _context.OTasks.FindAsync(id);
 
-			if (tasks == null)
+			if (task == null)
 			{
-				return NotFound();
+				return NotFound($"A Tarefa com o id: {id} não existe!");
 			}
 
-			if (tasks.State == TaskState.InProgress)
+			if (task.State != TaskState.InProgress)
 			{
-				tasks.State = TaskState.Completed;
-				_context.Entry(tasks).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
+				return BadRequest($"A tarefa não pode ser concluída a partir do seu estado atual: {task.State}");
 			}
-			else
-			{
-				return BadRequest("A tarefa não pode ser concluída a partir do seu estado atual.");
-			}
+
+			task.State = TaskState.Completed;
+			_context.Entry(task).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
 
 			return NoContent();
 		}
@@ -98,23 +94,21 @@ namespace SGET.Controllers
 		[HttpPut("{id}/cancel")]
 		public async Task<IActionResult> CancelTask(int id)
 		{
-			var tasks = await _context.OTasks.FindAsync(id);
+			var task = await _context.OTasks.FindAsync(id);
 
-			if (tasks == null)
+			if (task == null)
 			{
-				return NotFound();
+				return NotFound($"A Tarefa com o id: {id} não existe!");
 			}
 
-			if (tasks.State == TaskState.Created || tasks.State == TaskState.InProgress) 
+			if (task.State != TaskState.Created && task.State != TaskState.InProgress)
 			{
-				tasks.State = TaskState.Canceled;
-				_context.Entry(tasks).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
+				return BadRequest($"A tarefa não pode ser cancelada a partir do seu estado atual: {task.State}");
 			}
-			else
-			{
-				return BadRequest("Task cannot be canceled from its current state.");
-			}
+
+			task.State = TaskState.Canceled;
+			_context.Entry(task).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
 
 			return NoContent();
 		}
