@@ -31,6 +31,14 @@ namespace SGET
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Management API", Version = "v1" });
 			});
+
+			services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+			{
+				builder.WithOrigins("http://localhost:3000", "http://localhost:5173")
+					.AllowAnyMethod()
+					.AllowAnyHeader()
+					.AllowCredentials();
+			}));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,6 +56,8 @@ namespace SGET
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Management API V1");
 			});
+
+			app.UseCors("MyPolicy");
 
 			app.UseEndpoints(endpoints =>
 			{
