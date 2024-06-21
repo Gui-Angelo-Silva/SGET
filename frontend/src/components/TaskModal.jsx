@@ -24,17 +24,17 @@ const TaskModal = ({ onClose, onUpdateTable }) => {
 
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75'>
-      <div className='bg-white p-8 rounded shadow-lg'>
-        <h2 className='text-lg font-bold mb-4'>Nova Tarefa</h2>
+      <div className='bg-white p-8 rounded-lg shadow-lg'>
+        <h2 className='text-xl font-bold mb-4 w-full justify-center flex'>Nova Tarefa</h2>
         <input
           type='text'
-          className='border border-gray-400 px-3 py-2 mb-4 w-full'
+          className='border border-gray-400 px-3 py-2 mb-4 w-full rounded-md'
           placeholder='Nome da Tarefa'
           value={taskName}
           onChange={(e) => setTaskName(e.target.value)}
         />
         <textarea
-          className='border border-gray-400 px-3 py-2 mb-4 w-full'
+          className='border border-gray-400 px-3 py-2 mb-4 w-full rounded-md'
           placeholder='Descrição da Tarefa'
           value={taskDescription}
           onChange={(e) => setTaskDescription(e.target.value)}

@@ -24,8 +24,8 @@ function App() {
   };
 
   return (
-    <div className='min-h-screen w-full'>
-      <div className='flex justify-center'>
+    <div className='min-h-screen w-full bg-gradient-to-br from-blue-400/85 to-blue-100'>
+      <div className='flex justify-center text-center'>
         <h1 className='text-3xl py-10'>Sistema de Gerenciamento de Estados de Tarefas</h1>
       </div>
 
@@ -38,7 +38,7 @@ function App() {
         </button>
       </div>
 
-      <div className='flex justify-center mb-4'>
+      <div className='flex justify-center mb-4 items-center'>
         <label htmlFor="filterSelect" className="mr-2">Filtrar por estado:</label>
         <select id="filterSelect" value={filter} onChange={handleFilterChange} className="p-2">
           <option value="all">Todas</option>

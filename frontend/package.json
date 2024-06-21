@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@fontsource/lexend": "^5.0.20",
+    "@phosphor-icons/react": "^2.1.6",
     "axios": "^1.7.2",
+    "phosphor-icons": "^1.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reactstrap": "^9.2.2"
